@@ -1,0 +1,3 @@
+function mean_deviation(split)
+    if iscell(split) ~= 1
+        

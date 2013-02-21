@@ -1,0 +1,5 @@
+function feat = extraction(sinal)
+    feat = struct();
+    feat.zc = zero_crossing(sinal);
+    [band,fm] = signal_band(sinal)
+    feat.bandwidth = 
