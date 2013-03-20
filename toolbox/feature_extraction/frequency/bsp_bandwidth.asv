@@ -1,0 +1,44 @@
+function [bel, up, med] = bsp_bandwidth(signal, Fs)
+
+%if the lenght
+l = numel(signal);
+if l > 20000
+    b = floor(l/2) - 10000;
+    u = floor(l/2) + 10000;
+end
+[Px, x] = pwelch(signal(b:u), 33, 32, [], Fs, 'onesided');
+P = 10*log10(Px);
+max_power = max(P);
+indx = find(P >= max_power - 3);
+bel = x(indx(1));
+up = x(indx(numel(indx)));
+mini = min(P);
+if mini < 0
+    P = P + abs(mini);
+end
+area = trapz(P);
+tol = area*0.05;
+half_area = area/2;
+upp = numel(x);
+half_point = floor(numel(x)/2);
+idx = half_point;
+bot = 0;
+greater = 0;
+for i = 1:half_point
+    f = x(idx);
+    f_area = trapz(P(1:idx));
+    if f_area > (half_area - tol)
+        upp = idx;
+        idx = floor((idx - bot)/2);
+        greater = 1;
+    end
+    if f_area < (half_area + tol)
+        if greater == 1
+            break;
+        end
+        bot = idx;
+        idx = floor((upp - idx)/2);
+    end
+    greater = 0;
+end
+med = f;
