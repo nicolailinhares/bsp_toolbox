@@ -1,4 +1,6 @@
-feature_extraction
+Biomedical Signal Processing Toolbox
 ==================
 
-Scripts para extração de características
+Toolbox for digital signal processing in Matlab
+
+Documentation in doc folder
