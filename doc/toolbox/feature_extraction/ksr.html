@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ksr</title>
+  <meta name="keywords" content="ksr">
+  <meta name="description" content="KSR   Kernel smoothing regression">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">toolbox</a> &gt; <a href="index.html">feature_extraction</a> &gt; ksr.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for toolbox\feature_extraction&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>ksr
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>KSR   Kernel smoothing regression</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function r=ksr(x,y,h,N) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment"> KSR   Kernel smoothing regression
+
+ r=ksr(x,y) returns the Gaussian kernel regression in structure r such that
+   r.f(r.x) = y(x) + e
+ The bandwidth and number of samples are also stored in r.h and r.n
+ respectively.
+
+ r=ksr(x,y,h) performs the regression using the specified bandwidth, h.
+
+ r=ksr(x,y,h,n) calculates the regression in n points (default n=100).
+
+ Without output, ksr(x,y) or ksr(x,y,h) will display the regression plot.
+
+ Algorithm
+ The kernel regression is a non-parametric approach to estimate the
+ conditional expectation of a random variable:
+
+ E(Y|X) = f(X)
+
+ where f is a non-parametric function. Based on the kernel density
+ estimation, this code implements the Nadaraya-Watson kernel regression
+ using the Gaussian kernel as follows:
+
+ f(x) = sum(kerf((x-X)/h).*Y)/sum(kerf((x-X)/h))
+
+ See also gkde, ksdensity</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="ksr.html" class="code" title="function r=ksr(x,y,h,N)">ksr</a>	KSR   Kernel smoothing regression</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="ksr.html" class="code" title="function r=ksr(x,y,h,N)">ksr</a>	KSR   Kernel smoothing regression</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function r=ksr(x,y,h,N)</a>
+0002 <span class="comment">% KSR   Kernel smoothing regression</span>
+0003 <span class="comment">%</span>
+0004 <span class="comment">% r=ksr(x,y) returns the Gaussian kernel regression in structure r such that</span>
+0005 <span class="comment">%   r.f(r.x) = y(x) + e</span>
+0006 <span class="comment">% The bandwidth and number of samples are also stored in r.h and r.n</span>
+0007 <span class="comment">% respectively.</span>
+0008 <span class="comment">%</span>
+0009 <span class="comment">% r=ksr(x,y,h) performs the regression using the specified bandwidth, h.</span>
+0010 <span class="comment">%</span>
+0011 <span class="comment">% r=ksr(x,y,h,n) calculates the regression in n points (default n=100).</span>
+0012 <span class="comment">%</span>
+0013 <span class="comment">% Without output, ksr(x,y) or ksr(x,y,h) will display the regression plot.</span>
+0014 <span class="comment">%</span>
+0015 <span class="comment">% Algorithm</span>
+0016 <span class="comment">% The kernel regression is a non-parametric approach to estimate the</span>
+0017 <span class="comment">% conditional expectation of a random variable:</span>
+0018 <span class="comment">%</span>
+0019 <span class="comment">% E(Y|X) = f(X)</span>
+0020 <span class="comment">%</span>
+0021 <span class="comment">% where f is a non-parametric function. Based on the kernel density</span>
+0022 <span class="comment">% estimation, this code implements the Nadaraya-Watson kernel regression</span>
+0023 <span class="comment">% using the Gaussian kernel as follows:</span>
+0024 <span class="comment">%</span>
+0025 <span class="comment">% f(x) = sum(kerf((x-X)/h).*Y)/sum(kerf((x-X)/h))</span>
+0026 <span class="comment">%</span>
+0027 <span class="comment">% See also gkde, ksdensity</span>
+0028 
+0029 <span class="comment">% Example 1: smooth curve with noise</span>
+0030 <span class="comment">%{</span>
+0031 x = 1:100;
+0032 y = sin(x/10)+(x/50).^2;
+0033 yn = y + 0.2*randn(1,100);
+0034 r=<a href="ksr.html" class="code" title="function r=ksr(x,y,h,N)">ksr</a>(x,yn);
+0035 plot(x,y,<span class="string">'b-'</span>,x,yn,<span class="string">'co'</span>,r.x,r.f,<span class="string">'r--'</span>,<span class="string">'linewidth'</span>,2)
+0036 legend(<span class="string">'true'</span>,<span class="string">'data'</span>,<span class="string">'regression'</span>,<span class="string">'location'</span>,<span class="string">'northwest'</span>);
+0037 title(<span class="string">'Gaussian kernel regression'</span>)
+0038 <span class="comment">%}</span>
+0039 <span class="comment">% Example 2: with missing data</span>
+0040 <span class="comment">%{</span>
+0041 x = sort(rand(1,100)*99)+1;
+0042 y = sin(x/10)+(x/50).^2;
+0043 y(round(rand(1,35)*100)) = NaN;
+0044 yn = y + 0.2*randn(1,100);
+0045 r=<a href="ksr.html" class="code" title="function r=ksr(x,y,h,N)">ksr</a>(x,yn);
+0046 plot(x,y,<span class="string">'b-'</span>,x,yn,<span class="string">'co'</span>,r.x,r.f,<span class="string">'r--'</span>,<span class="string">'linewidth'</span>,2)
+0047 legend(<span class="string">'true'</span>,<span class="string">'data'</span>,<span class="string">'regression'</span>,<span class="string">'location'</span>,<span class="string">'northwest'</span>);
+0048 title(<span class="string">'Gaussian kernel regression with 20% missing data'</span>)
+0049 <span class="comment">%}</span>
+0050 
+0051 <span class="comment">% By Yi Cao at Cranfield University on 12 March 2008.</span>
+0052 <span class="comment">%</span>
+0053 
+0054 <span class="comment">% Check input and output</span>
+0055 error(nargchk(2,4,nargin));
+0056 error(nargoutchk(0,1,nargout));
+0057 <span class="keyword">if</span> numel(x)~=numel(y)
+0058     error(<span class="string">'x and y are in different sizes.'</span>);
+0059 <span class="keyword">end</span>
+0060 
+0061 x=x(:);
+0062 y=y(:);
+0063 <span class="comment">% clean missing or invalid data points</span>
+0064 inv=(x~=x)|(y~=y);
+0065 x(inv)=[];
+0066 y(inv)=[];
+0067 
+0068 <span class="comment">% Default parameters</span>
+0069 <span class="keyword">if</span> nargin&lt;4
+0070     N=100;
+0071 <span class="keyword">elseif</span> ~isscalar(N)
+0072     error(<span class="string">'N must be a scalar.'</span>)
+0073 <span class="keyword">end</span>
+0074 r.n=length(x);
+0075 <span class="keyword">if</span> nargin&lt;3
+0076     <span class="comment">% optimal bandwidth suggested by Bowman and Azzalini (1997) p.31</span>
+0077     hx=median(abs(x-median(x)))/0.6745*(4/3/r.n)^0.2;
+0078     hy=median(abs(y-median(y)))/0.6745*(4/3/r.n)^0.2;
+0079     h=sqrt(hy*hx);
+0080     <span class="keyword">if</span> h&lt;sqrt(eps)*N
+0081         error(<span class="string">'There is no enough variation in the data. Regression is meaningless.'</span>)
+0082     <span class="keyword">end</span>
+0083 <span class="keyword">elseif</span> ~isscalar(h)
+0084     error(<span class="string">'h must be a scalar.'</span>)
+0085 <span class="keyword">end</span>
+0086 r.h=h;
+0087 
+0088 <span class="comment">% Gaussian kernel function</span>
+0089 kerf=@(z)exp(-z.*z/2)/sqrt(2*pi);
+0090 
+0091 r.x=linspace(min(x),max(x),N);
+0092 r.f=zeros(1,N);
+0093 <span class="keyword">for</span> k=1:N
+0094     z=kerf((r.x(k)-x)/h);
+0095     plot(x,z.*y,<span class="string">'r'</span>,x,z);
+0096     r.f(k)=sum(z.*y)/sum(z);
+0097 <span class="keyword">end</span>
+0098 
+0099 <span class="comment">% Plot</span>
+0100 <span class="keyword">if</span> ~nargout
+0101     plot(r.x,r.f,<span class="string">'r'</span>,x,y,<span class="string">'bo'</span>)
+0102     ylabel(<span class="string">'f(x)'</span>)
+0103     xlabel(<span class="string">'x'</span>)
+0104     title(<span class="string">'Kernel Smoothing Regression'</span>);
+0105 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 21-Mar-2013 21:11:39 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

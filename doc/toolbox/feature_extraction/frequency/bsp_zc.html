@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of bsp_zc</title>
+  <meta name="keywords" content="bsp_zc">
+  <meta name="description" content="% Function name....: bsp_zc">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">toolbox</a> &gt; <a href="../index.html">feature_extraction</a> &gt; <a href="index.html">frequency</a> &gt; bsp_zc.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for toolbox\feature_extraction\frequency&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>bsp_zc
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>% Function name....: bsp_zc</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function zero_count = bsp_zc(seq, limiar) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Function name....: bsp_zc
+ Date.............: February 20, 2013
+ Author...........: Nicolai Diniz Linhares
+ Description......:
+                    This function counts how many time a signal pass
+                    through zero
+ Parameters.......: 
+                    seq .....-&gt; input series
+                    limiar ..-&gt; the threshold to be consider as zero
+ Return...........:
+                    zero_count .... -&gt; the number of identified zero
+                    crossings
+ Usage............:
+                    t = (0:500)*0.001; 
+                    y1 = sin(2*pi*60*t);
+                    y2 = sin(2*pi*120*t) + 0.5;
+                    z1 = zero_crossing(y1);
+                    z2 = zero_crossing(y2, 0.5);</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function zero_count = bsp_zc(seq, limiar)</a>
+0002 <span class="comment">%% Function name....: bsp_zc</span>
+0003 <span class="comment">% Date.............: February 20, 2013</span>
+0004 <span class="comment">% Author...........: Nicolai Diniz Linhares</span>
+0005 <span class="comment">% Description......:</span>
+0006 <span class="comment">%                    This function counts how many time a signal pass</span>
+0007 <span class="comment">%                    through zero</span>
+0008 <span class="comment">% Parameters.......:</span>
+0009 <span class="comment">%                    seq .....-&gt; input series</span>
+0010 <span class="comment">%                    limiar ..-&gt; the threshold to be consider as zero</span>
+0011 <span class="comment">% Return...........:</span>
+0012 <span class="comment">%                    zero_count .... -&gt; the number of identified zero</span>
+0013 <span class="comment">%                    crossings</span>
+0014 <span class="comment">% Usage............:</span>
+0015 <span class="comment">%                    t = (0:500)*0.001;</span>
+0016 <span class="comment">%                    y1 = sin(2*pi*60*t);</span>
+0017 <span class="comment">%                    y2 = sin(2*pi*120*t) + 0.5;</span>
+0018 <span class="comment">%                    z1 = zero_crossing(y1);</span>
+0019 <span class="comment">%                    z2 = zero_crossing(y2, 0.5);</span>
+0020 
+0021                     
+0022     [l,c] = size(seq);
+0023     <span class="keyword">if</span> nargin == 1
+0024         limiar = 0;
+0025     <span class="keyword">end</span>
+0026     seq = seq - limiar;
+0027     zero_count = 0;
+0028     <span class="keyword">for</span> i = 2:c
+0029         abs_a = abs(seq(i-1));
+0030         abs_b = abs(seq(i));
+0031         abs_mi_a = abs(abs_a - abs_b);
+0032         abs_mi_b = abs(seq(i-1) - seq(i));
+0033         abs_pl_a = abs_a + abs_b;
+0034         abs_pl_b = abs(seq(i-1) + seq(i));
+0035         <span class="keyword">if</span> abs_mi_a &lt; abs_mi_b || abs_pl_a &gt; abs_pl_b
+0036           zero_count = zero_count + 1;
+0037         <span class="keyword">end</span>
+0038     <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 21-Mar-2013 21:11:39 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

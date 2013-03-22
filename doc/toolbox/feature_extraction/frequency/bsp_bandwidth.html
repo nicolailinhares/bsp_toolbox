@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of bsp_bandwidth</title>
+  <meta name="keywords" content="bsp_bandwidth">
+  <meta name="description" content="% Function name....: bsp_bandwidth">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">toolbox</a> &gt; <a href="../index.html">feature_extraction</a> &gt; <a href="index.html">frequency</a> &gt; bsp_bandwidth.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for toolbox\feature_extraction\frequency&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>bsp_bandwidth
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>% Function name....: bsp_bandwidth</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [fl, fh, med] = bsp_bandwidth(signal, Fs) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Function name....: bsp_bandwidth
+ Date.............: February 20, 2013
+ Author...........: Nicolai Diniz Linhares
+ Description......:
+                    This function computes the mode of the signal through
+                    histogram estimation
+ Parameters.......: 
+                    signal .....-&gt; input series
+                    Fs ..-&gt; sampling frequency
+ Return...........:
+                    bel .... -&gt; frequency of the begining of the band
+                    up .... -&gt; frequency of the end of the band
+                    med ...-&gt; the median frequency
+ Usage............:
+                    t = (0:500)*0.001; 
+                    y1 = sin(2*pi*60*t) + 0.8*sin(2*pi*80*t);
+                    y2 = sin(2*pi*120*t) + 0.7*sin(2*pi*140*t);
+                    [fl,fh,med] = bsp_bandwidth(y1,1000);
+                    [fl2,fh2,med2] = bsp_bandwidth(y2,1000);
+take at maximum 20000 samples, for performance sake</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [fl, fh, med] = bsp_bandwidth(signal, Fs)</a>
+0002 <span class="comment">%% Function name....: bsp_bandwidth</span>
+0003 <span class="comment">% Date.............: February 20, 2013</span>
+0004 <span class="comment">% Author...........: Nicolai Diniz Linhares</span>
+0005 <span class="comment">% Description......:</span>
+0006 <span class="comment">%                    This function computes the mode of the signal through</span>
+0007 <span class="comment">%                    histogram estimation</span>
+0008 <span class="comment">% Parameters.......:</span>
+0009 <span class="comment">%                    signal .....-&gt; input series</span>
+0010 <span class="comment">%                    Fs ..-&gt; sampling frequency</span>
+0011 <span class="comment">% Return...........:</span>
+0012 <span class="comment">%                    bel .... -&gt; frequency of the begining of the band</span>
+0013 <span class="comment">%                    up .... -&gt; frequency of the end of the band</span>
+0014 <span class="comment">%                    med ...-&gt; the median frequency</span>
+0015 <span class="comment">% Usage............:</span>
+0016 <span class="comment">%                    t = (0:500)*0.001;</span>
+0017 <span class="comment">%                    y1 = sin(2*pi*60*t) + 0.8*sin(2*pi*80*t);</span>
+0018 <span class="comment">%                    y2 = sin(2*pi*120*t) + 0.7*sin(2*pi*140*t);</span>
+0019 <span class="comment">%                    [fl,fh,med] = bsp_bandwidth(y1,1000);</span>
+0020 <span class="comment">%                    [fl2,fh2,med2] = bsp_bandwidth(y2,1000);</span>
+0021 <span class="comment">%take at maximum 20000 samples, for performance sake</span>
+0022 l = numel(signal);
+0023 <span class="keyword">if</span> l &gt; 20000
+0024     b = floor(l/2) - 10000;
+0025     u = floor(l/2) + 10000;
+0026     signal = signal(b:u);
+0027 <span class="keyword">end</span>
+0028 <span class="comment">%calculate the power estimate</span>
+0029 [Px, x] = pwelch(signal, [], [], [], Fs, <span class="string">'onesided'</span>);
+0030 <span class="comment">%scale the units for dB</span>
+0031 P = 10*log10(Px);
+0032 <span class="comment">%find the points where the power is 3dB lower than the max</span>
+0033 max_power = max(P);
+0034 indx = find(P &gt;= max_power - 3);
+0035 fl = x(indx(1));
+0036 ind_fl = indx(1);
+0037 fh = x(indx(numel(indx)));
+0038 ind_fh = indx(numel(indx));
+0039 <span class="keyword">if</span> nargout ~= 2
+0040     <span class="comment">%insert an offset to prevent the area from being negative</span>
+0041     mini = min(P);
+0042     <span class="keyword">if</span> mini &lt; 0
+0043         P = P + abs(mini);
+0044     <span class="keyword">end</span>
+0045     <span class="comment">%calculates the area</span>
+0046     area = trapz(P);
+0047     tol = area*0.005;
+0048     half_area = area/2;
+0049     <span class="comment">%set the variables for the binary search of the median frequency</span>
+0050     fhp = numel(x);
+0051     half_point = floor(numel(x)/2);
+0052     idx = half_point;
+0053     bot = 0;
+0054     greater = 0;
+0055     <span class="comment">%execute the loop until the calculate area lays inside the tolerate interval</span>
+0056     <span class="comment">%for the half of the area</span>
+0057     <span class="keyword">for</span> i = 1:half_point
+0058         f = x(idx);
+0059         f_area = trapz(P(1:idx));
+0060         <span class="keyword">if</span> f_area &gt; (half_area - tol)
+0061             fhp = idx;
+0062             idx = idx - floor((idx - bot)/2);
+0063             greater = 1;
+0064         <span class="keyword">end</span>
+0065         <span class="keyword">if</span> f_area &lt; (half_area + tol)
+0066             <span class="keyword">if</span> greater == 1
+0067                 <span class="keyword">break</span>;
+0068             <span class="keyword">end</span>
+0069             bot = idx;
+0070             idx = idx + floor((fhp - idx)/2);
+0071         <span class="keyword">end</span>
+0072         greater = 0;
+0073     <span class="keyword">end</span>
+0074     med = f;
+0075     <span class="keyword">if</span> nargout == 0
+0076         P = P - abs(mini);
+0077         h = plot(x,P);
+0078         line(fl,P(ind_fl),<span class="string">'Marker'</span>,<span class="string">'s'</span>,<span class="string">'Color'</span>,<span class="string">'red'</span>,<span class="string">'LineWidth'</span>,2.0);
+0079         line(fh,P(ind_fh),<span class="string">'Marker'</span>,<span class="string">'s'</span>,<span class="string">'Color'</span>,<span class="string">'red'</span>,<span class="string">'LineWidth'</span>,2.0);
+0080         line([med,med],[mini, max_power],<span class="string">'Color'</span>,<span class="string">'magenta'</span>);
+0081     <span class="keyword">end</span>
+0082 <span class="keyword">end</span></pre></div>
+<hr><address>Generated on Thu 21-Mar-2013 21:11:39 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

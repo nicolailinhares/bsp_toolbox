@@ -1,0 +1,66 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of ApEn</title>
+  <meta name="keywords" content="ApEn">
+  <meta name="description" content="%%%%%%%%faz o cálculo da entropia aproximada de uma série temporal">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">toolbox</a> &gt; <a href="index.html">feature_extraction</a> &gt; ApEn.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for toolbox\feature_extraction&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>ApEn
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>%%%%%%%%faz o cálculo da entropia aproximada de uma série temporal</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function entropia_aproximada = ApEn(m,r,N,sinal) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">%%%%%%%%faz o cálculo da entropia aproximada de uma série temporal</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="fi_calc.html" class="code" title="function fi_m = fi_calc(m,r,N,seg)">fi_calc</a>	</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <span class="comment">%%%%%%%%%faz o cálculo da entropia aproximada de uma série temporal</span>
+0002 
+0003 <span class="comment">%%% m = tamanho da sequência a ser comparada ( geralmente = 2)</span>
+0004 <span class="comment">%%% r = tolerância de semelhânça (0.1*SD&lt; r &lt; 0.25*SD)</span>
+0005 <span class="comment">%%% N = numero de pontos do sinal a ser analisado ( 75 &lt; N &lt; 5000)</span>
+0006 <a name="_sub0" href="#_subfunctions" class="code">function entropia_aproximada = ApEn(m,r,N,sinal)</a>
+0007     
+0008 <span class="keyword">if</span> (length(sinal) &lt; N)
+0009     disp(<span class="string">'o tamanho do vetor é menor do que o sinal'</span>)
+0010     N = length(sinal);
+0011 <span class="keyword">end</span>
+0012 u = sinal(1:N);
+0013 
+0014 fi_m = <a href="fi_calc.html" class="code" title="function fi_m = fi_calc(m,r,N,seg)">fi_calc</a>(m,r,N,u);
+0015 fi_m2 = <a href="fi_calc.html" class="code" title="function fi_m = fi_calc(m,r,N,seg)">fi_calc</a>(m+1,r,N,u);
+0016 
+0017 <span class="comment">%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+0018 <span class="comment">%%%calculo da entropia aproximada</span>
+0019 entropia_aproximada = fi_m - fi_m2;</pre></div>
+<hr><address>Generated on Thu 21-Mar-2013 21:11:39 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
