@@ -1,4 +1,4 @@
-function [fl, fh, med] = bsp_bandwidth(signal, Fs)
+function [fl, fh, med] = bsp_bandwidth(signal, Fs, nfft, p)
 %% Function name....: bsp_bandwidth
 % Date.............: February 20, 2013
 % Author...........: Nicolai Diniz Linhares
@@ -19,43 +19,39 @@ function [fl, fh, med] = bsp_bandwidth(signal, Fs)
 %                    [fl,fh,med] = bsp_bandwidth(y1,1000);
 %                    [fl2,fh2,med2] = bsp_bandwidth(y2,1000);
 %take at maximum 20000 samples, for performance sake
-l = numel(signal);
-if l > 20000
-    b = floor(l/2) - 10000;
-    u = floor(l/2) + 10000;
-    signal = signal(b:u);
+if nargin == 2
+    nfft = 1024;
+    p = 4;
+elseif nargin == 3
+    p = 4;
 end
 %calculate the power estimate
-[Px, x] = pwelch(signal, [], [], [], Fs, 'onesided');
-%scale the units for dB
-P = 10*log10(Px);
-%find the points where the power is 3dB lower than the max
+[Px, x] = pburg(signal, p, nfft, Fs);
+%use spline interpolation fucntion for better resolution
+new_x = 0:0.1:x(end);
+P = spline(x,Px,new_x);
 max_power = max(P);
-indx = find(P >= max_power - 3);
-fl = x(indx(1));
+%find the points where the power is 3dB lower than the max
+indx = find(P >= 0.707*max_power);
+fl = new_x(indx(1));
 ind_fl = indx(1);
-fh = x(indx(numel(indx)));
+fh = new_x(indx(numel(indx)));
 ind_fh = indx(numel(indx));
 if nargout ~= 2
-    %insert an offset to prevent the area from being negative
-    mini = min(P);
-    if mini < 0
-        P = P + abs(mini);
-    end
     %calculates the area
     area = trapz(P);
     tol = area*0.005;
     half_area = area/2;
     %set the variables for the binary search of the median frequency
-    fhp = numel(x);
-    half_point = floor(numel(x)/2);
+    fhp = numel(new_x);
+    half_point = floor(numel(new_x)/2);
     idx = half_point;
     bot = 0;
     greater = 0;
     %execute the loop until the calculate area lays inside the tolerate interval
     %for the half of the area
     for i = 1:half_point
-        f = x(idx);
+        f = new_x(idx);
         f_area = trapz(P(1:idx));
         if f_area > (half_area - tol)
             fhp = idx;
@@ -73,10 +69,9 @@ if nargout ~= 2
     end
     med = f;
     if nargout == 0
-        P = P - abs(mini);
-        h = plot(x,P);
+        h = plot(new_x,P);
         line(fl,P(ind_fl),'Marker','s','Color','red','LineWidth',2.0);
         line(fh,P(ind_fh),'Marker','s','Color','red','LineWidth',2.0);
-        line([med,med],[mini, max_power],'Color','magenta');
+        line([med,med],[0, max_power],'Color','magenta');
     end
 end
