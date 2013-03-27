@@ -15,8 +15,8 @@ function zero_count = bsp_zc(seq, limiar)
 %                    t = (0:500)*0.001; 
 %                    y1 = sin(2*pi*60*t);
 %                    y2 = sin(2*pi*120*t) + 0.5;
-%                    z1 = zero_crossing(y1);
-%                    z2 = zero_crossing(y2, 0.5);
+%                    z1 = bsp_zc(y1);
+%                    z2 = bsp_zc(y2, 0.5);
 
                     
     [l,c] = size(seq);
