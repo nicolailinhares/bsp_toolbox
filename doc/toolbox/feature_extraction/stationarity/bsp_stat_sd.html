@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of bsp_stat_sd</title>
+  <meta name="keywords" content="bsp_stat_sd">
+  <meta name="description" content="% Function name....: bsp_stat_sd">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../../index.html">Home</a> &gt;  <a href="#">toolbox</a> &gt; <a href="../index.html">feature_extraction</a> &gt; <a href="index.html">stationarity</a> &gt; bsp_stat_sd.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../../index.html"><img alt="<" border="0" src="../../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for toolbox\feature_extraction\stationarity&nbsp;<img alt=">" border="0" src="../../../right.png"></a></td></tr></table>-->
+
+<h1>bsp_stat_sd
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>% Function name....: bsp_stat_sd</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="box"><strong>function [me,sd,ds] = bsp_stat_sd(signal, t, Fs) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Function name....: bsp_stat_sd
+ Date.............: February 20, 2013
+ Author...........: Nicolai Diniz Linhares
+ Description......:
+                    This function computes the sd of the mean and sd of
+                    the signal and the degree of the stationarity as the
+                    time goes
+ Parameters.......: 
+                    signal .....-&gt; input series
+                    t ..-&gt; the period of time of each calculation
+                    Fs ..-&gt; the sampling frequeny of the signal
+ Return...........:
+                    me .... -&gt; the standard deviation of the mean
+                    sd .... -&gt; the standard deviation of the standard
+                    deviation
+                    ds ... -&gt; the median of the degrees of stationarity of
+                    each window
+ Usage............:
+                    t = (0:500)*0.001; 
+                    y1 = sin(2*pi*60*t);
+                    [me,sd] = bsp_stat_sd(y1, 100);</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+<li><a href="bsp_ds.html" class="code" title="function ds = bsp_ds(signal, Fs)%, p, nfft)">bsp_ds</a>	% Function name....: bsp_ds</li><li><a href="../../../toolbox/windowing/bsp_vector_split.html" class="code" title="function split = bsp_vector_split(signal,n)">bsp_vector_split</a>	% Function name....: bsp_zc</li></ul>
+This function is called by:
+<ul style="list-style-image:url(../../../matlabicon.gif)">
+</ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function [me,sd,ds] = bsp_stat_sd(signal, t, Fs)</a>
+0002 <span class="comment">%% Function name....: bsp_stat_sd</span>
+0003 <span class="comment">% Date.............: February 20, 2013</span>
+0004 <span class="comment">% Author...........: Nicolai Diniz Linhares</span>
+0005 <span class="comment">% Description......:</span>
+0006 <span class="comment">%                    This function computes the sd of the mean and sd of</span>
+0007 <span class="comment">%                    the signal and the degree of the stationarity as the</span>
+0008 <span class="comment">%                    time goes</span>
+0009 <span class="comment">% Parameters.......:</span>
+0010 <span class="comment">%                    signal .....-&gt; input series</span>
+0011 <span class="comment">%                    t ..-&gt; the period of time of each calculation</span>
+0012 <span class="comment">%                    Fs ..-&gt; the sampling frequeny of the signal</span>
+0013 <span class="comment">% Return...........:</span>
+0014 <span class="comment">%                    me .... -&gt; the standard deviation of the mean</span>
+0015 <span class="comment">%                    sd .... -&gt; the standard deviation of the standard</span>
+0016 <span class="comment">%                    deviation</span>
+0017 <span class="comment">%                    ds ... -&gt; the median of the degrees of stationarity of</span>
+0018 <span class="comment">%                    each window</span>
+0019 <span class="comment">% Usage............:</span>
+0020 <span class="comment">%                    t = (0:500)*0.001;</span>
+0021 <span class="comment">%                    y1 = sin(2*pi*60*t);</span>
+0022 <span class="comment">%                    [me,sd] = bsp_stat_sd(y1, 100);</span>
+0023     n = t*Fs;
+0024     split = <a href="../../../toolbox/windowing/bsp_vector_split.html" class="code" title="function split = bsp_vector_split(signal,n)">bsp_vector_split</a>(signal, n);
+0025     <span class="keyword">if</span> iscell(split) ~= 1
+0026         throw(MException(<span class="string">'InvalidParameter'</span>));
+0027     <span class="keyword">end</span>
+0028     L = max(size(split));
+0029     s_info = zeros(L,2);
+0030     ds_info = zeros(L,1);
+0031     <span class="keyword">for</span> i = 1:L
+0032         s_info(i,1) = mean(split{i});
+0033         s_info(i,2) = std(split{i});
+0034         ds_info(i) = <a href="bsp_ds.html" class="code" title="function ds = bsp_ds(signal, Fs)%, p, nfft)">bsp_ds</a>(split{i}, Fs);
+0035     <span class="keyword">end</span>
+0036     s = std(s_info);
+0037     me = s(1);
+0038     sd = s(2);
+0039     ds = median(ds_info);</pre></div>
+<hr><address>Generated on Wed 03-Apr-2013 14:07:49 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>

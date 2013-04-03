@@ -1,4 +1,4 @@
-function [fl, fh, med] = bsp_bandwidth(signal, Fs, nfft, p)
+function [fl, fh, fmed, fmode, fmean] = bsp_bandwidth(signal, Fs, nfft, p)
 %% Function name....: bsp_bandwidth
 % Date.............: February 20, 2013
 % Author...........: Nicolai Diniz Linhares
@@ -27,10 +27,13 @@ elseif nargin == 3
 end
 %calculate the power estimate
 [Px, x] = pburg(signal, p, nfft, Fs);
+fmean = sum(Px.*x)/sum(Px);
+Pmean = spline(x,Px,fmean);
 %use spline interpolation fucntion for better resolution
 new_x = 0:0.1:x(end);
 P = spline(x,Px,new_x);
-max_power = max(P);
+[max_power, indmax] = max(P);
+fmode = new_x(indmax);
 %find the points where the power is 3dB lower than the max
 indx = find(P >= 0.707*max_power);
 fl = new_x(indx(1));
@@ -67,11 +70,13 @@ if nargout ~= 2
         end
         greater = 0;
     end
-    med = f;
+    fmed = f;
     if nargout == 0
-        h = plot(new_x,P);
+        plot(new_x,P);
         line(fl,P(ind_fl),'Marker','s','Color','red','LineWidth',2.0);
         line(fh,P(ind_fh),'Marker','s','Color','red','LineWidth',2.0);
-        line([med,med],[0, max_power],'Color','magenta');
+        line(fmode,max_power,'Marker','s','Color','green','LineWidth',2.0);
+        line(fmean,Pmean,'Marker','s','Color','yellow','LineWidth',2.0);
+        line([fmed,fmed],[0, max_power],'Color','magenta');
     end
 end

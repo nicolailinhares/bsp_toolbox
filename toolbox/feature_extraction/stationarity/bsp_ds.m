@@ -1,22 +1,36 @@
-function ds = bsp_ds(signal)
+function ds = bsp_ds(signal, Fs)%, p, nfft)
 %% Function name....: bsp_ds
 % Date.............: February 20, 2013
 % Author...........: Nicolai Diniz Linhares
 % Description......:
-%                    This function estimates the degree of stationarity of
-%                    the signal, based on hilbert transformation
+%                    This function calculates the degree of stationarity
+%                    for a period T
 % Parameters.......: 
-%                    sginal .....-> input series
+%                    signal .....-> input series
+%                    Fs ..-> sampling frequency
+%                    p(optional) ..-> the autoregressive order for energy estimation
+%                    nfft(optional) ..-> number of points of fft for energy estmation
 % Return...........:
-%                    ds .... -> the degree of stationarity
+%                    ds .... -> the median of the results for each
+%                    frequency
 % Usage............:
 %                    t = (0:500)*0.001; 
 %                    y1 = sin(2*pi*60*t);
-%                    y2 = sin(2*pi*120*t);
-%                    z1 = bsp_ds(y1);
-%                    z2 = bsp_ds(y2);
-    L = max(size(signal));
-    h_transf = hilbert(signal);
-    n = (sum(abs(h_transf)))/L;
-    elem = (1 - (abs(h_transf)./n)).^2;
-    ds = sum(elem)/L;
+%                    ds = bsp_ds(y1,1000,0.5);
+
+%if nargin < 4
+%    nfft = 1024;
+%end
+%if nargin < 3
+%   p = 4;
+%end
+%[h,x] = pburg(signal, p, nfft, Fs);
+[H, f, t] = spectrogram(signal, [], [], [], Fs);
+H = abs(H);
+h = sum(H,2);
+T = numel(signal)*(1/Fs);
+for k = 1:numel(t)
+    H(:,k) = H(:,k)./(h/T);
+end
+H = ((1 - H).^2)/T;
+ds = median(sum(H,2));

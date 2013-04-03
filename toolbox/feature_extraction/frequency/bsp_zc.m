@@ -1,38 +1,34 @@
-function zero_count = bsp_zc(seq, limiar)
-%% Function name....: bsp_zc
-% Date.............: February 20, 2013
-% Author...........: Nicolai Diniz Linhares
+function [z]= bsp_zc(y)
+%% Function name....: zero_crossing
+% Date.............: December 13, 2002
+% Author...........: Adriano de Oliveira Andrade
 % Description......:
-%                    This function counts how many time a signal pass
-%                    through zero
+%                    zero_crossing estimates the number of zero-crossings of an input sequence y
+%
 % Parameters.......: 
-%                    seq .....-> input series
-%                    limiar ..-> the threshold to be consider as zero
+%                    y ..... -> input sequence
 % Return...........:
-%                    zero_count .... -> the number of identified zero
-%                    crossings
+%                    z ..... -> number of zero-crossings
+% Remarks..........: This function uses sng to define a zero crossing
+% for compilation: mcc -x zero_crossing
 % Usage............:
 %                    t = (0:500)*0.001; 
 %                    y1 = sin(2*pi*60*t);
 %                    y2 = sin(2*pi*120*t) + 0.5;
 %                    z1 = bsp_zc(y1);
 %                    z2 = bsp_zc(y2, 0.5);
-
-                    
-    [l,c] = size(seq);
-    if nargin == 1
-        limiar = 0;
-    end
-    seq = seq - limiar;
-    zero_count = 0;
-    for i = 2:c
-        abs_a = abs(seq(i-1));
-        abs_b = abs(seq(i));
-        abs_mi_a = abs(abs_a - abs_b);
-        abs_mi_b = abs(seq(i-1) - seq(i));
-        abs_pl_a = abs_a + abs_b;
-        abs_pl_b = abs(seq(i-1) + seq(i));
-        if abs_mi_a < abs_mi_b || abs_pl_a > abs_pl_b
-          zero_count = zero_count + 1;
-        end
-    end
+  z=0;
+  s=length(y);
+  for I=1:s-1,
+      
+      %This piece of code replaced the function sng
+      x = -y(I)*y(I+1);
+      if(x>0),
+        z=z+1;
+      end;
+%     z=z+sng(-y(I)*y(I+1));
+      if(y(I+1)==0)&&(y(I)~=0),
+          z=z+1; %consider that case of sawtooth function (ie, sawtooth(2*pi*50*t))
+      end;
+  end%for
+  

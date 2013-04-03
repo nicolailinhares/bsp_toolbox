@@ -1,0 +1,97 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                "http://www.w3.org/TR/REC-html40/loose.dtd">
+<html>
+<head>
+  <title>Description of bsp_vector_split</title>
+  <meta name="keywords" content="bsp_vector_split">
+  <meta name="description" content="% Function name....: bsp_zc">
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+  <meta name="generator" content="m2html v1.5 &copy; 2003-2005 Guillaume Flandin">
+  <meta name="robots" content="index, follow">
+  <link type="text/css" rel="stylesheet" href="../../m2html.css">
+</head>
+<body>
+<a name="_top"></a>
+<div><a href="../../index.html">Home</a> &gt;  <a href="#">toolbox</a> &gt; <a href="index.html">windowing</a> &gt; bsp_vector_split.m</div>
+
+<!--<table width="100%"><tr><td align="left"><a href="../../index.html"><img alt="<" border="0" src="../../left.png">&nbsp;Master index</a></td>
+<td align="right"><a href="index.html">Index for toolbox\windowing&nbsp;<img alt=">" border="0" src="../../right.png"></a></td></tr></table>-->
+
+<h1>bsp_vector_split
+</h1>
+
+<h2><a name="_name"></a>PURPOSE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>% Function name....: bsp_zc</strong></div>
+
+<h2><a name="_synopsis"></a>SYNOPSIS <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="box"><strong>function split = bsp_vector_split(signal,n) </strong></div>
+
+<h2><a name="_description"></a>DESCRIPTION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre class="comment">% Function name....: bsp_zc
+ Date.............: February 20, 2013
+ Author...........: Nicolai Diniz Linhares
+ Description......:
+                    This function split the signal into windows containing
+                    n points
+ Parameters.......: 
+                    signal .....-&gt; input series
+                    n ..-&gt; number of values in each window
+ Return...........:
+                    split .... -&gt; a cell array containing as many vectors
+                    as necessary to put the signal into the specified
+                    window
+ Usage............:
+                    t = (0:500)*0.001; 
+                    y1 = sin(2*pi*60*t);
+                    z1 = split(y1,100);</pre></div>
+
+<!-- crossreference -->
+<h2><a name="_cross"></a>CROSS-REFERENCE INFORMATION <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+This function calls:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+</ul>
+This function is called by:
+<ul style="list-style-image:url(../../matlabicon.gif)">
+<li><a href="../../toolbox/feature_extraction/stationarity/bsp_stat_sd.html" class="code" title="function [me,sd,ds] = bsp_stat_sd(signal, t, Fs)">bsp_stat_sd</a>	% Function name....: bsp_stat_sd</li></ul>
+<!-- crossreference -->
+
+
+
+<h2><a name="_source"></a>SOURCE CODE <a href="#_top"><img alt="^" border="0" src="../../up.png"></a></h2>
+<div class="fragment"><pre>0001 <a name="_sub0" href="#_subfunctions" class="code">function split = bsp_vector_split(signal,n)</a>
+0002 <span class="comment">%% Function name....: bsp_zc</span>
+0003 <span class="comment">% Date.............: February 20, 2013</span>
+0004 <span class="comment">% Author...........: Nicolai Diniz Linhares</span>
+0005 <span class="comment">% Description......:</span>
+0006 <span class="comment">%                    This function split the signal into windows containing</span>
+0007 <span class="comment">%                    n points</span>
+0008 <span class="comment">% Parameters.......:</span>
+0009 <span class="comment">%                    signal .....-&gt; input series</span>
+0010 <span class="comment">%                    n ..-&gt; number of values in each window</span>
+0011 <span class="comment">% Return...........:</span>
+0012 <span class="comment">%                    split .... -&gt; a cell array containing as many vectors</span>
+0013 <span class="comment">%                    as necessary to put the signal into the specified</span>
+0014 <span class="comment">%                    window</span>
+0015 <span class="comment">% Usage............:</span>
+0016 <span class="comment">%                    t = (0:500)*0.001;</span>
+0017 <span class="comment">%                    y1 = sin(2*pi*60*t);</span>
+0018 <span class="comment">%                    z1 = split(y1,100);</span>
+0019 
+0020     L = max(size(signal));
+0021     pages = idivide(int32(L), int32(n),<span class="string">'floor'</span>);
+0022     rest = rem(L,n);
+0023     split = {};
+0024     <span class="keyword">for</span> i = 1:pages
+0025         bel = n*(i-1)+1;
+0026         <span class="comment">%split(i,1:n) = signal(bel:(bel+n-1));</span>
+0027         split{i} = signal(bel:(bel+n-1));
+0028     <span class="keyword">end</span>
+0029     <span class="keyword">if</span> rest &gt; 0
+0030         bel = pages*n + 1;
+0031         <span class="comment">%split(i+1,1:rest) = signal(bel:(bel+rest-1));</span>
+0032         split{i+1} = signal(bel:(bel+rest-1));
+0033     <span class="keyword">end</span>
+0034</pre></div>
+<hr><address>Generated on Wed 03-Apr-2013 14:07:49 by <strong><a href="http://www.artefact.tk/software/matlab/m2html/" title="Matlab Documentation in HTML">m2html</a></strong> &copy; 2005</address>
+</body>
+</html>
