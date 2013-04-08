@@ -8,17 +8,22 @@ function [fl, fh, fmed, fmode, fmean] = bsp_bandwidth(signal, Fs, nfft, p)
 % Parameters.......: 
 %                    signal .....-> input series
 %                    Fs ..-> sampling frequency
+%                    nfft ..-> number of point in the fft(optional)
+%                    p ..-> autoregressive model degree(optional)
 % Return...........:
-%                    bel .... -> frequency of the begining of the band
-%                    up .... -> frequency of the end of the band
-%                    med ...-> the median frequency
+%                    fl .... -> frequency of the begining of the band
+%                    fh .... -> frequency of the end of the band
+%                    fmed ...-> the median frequency
+%                    fmode ..-> the mode frequency
+%                    fmean ..-> the mean frequency
 % Usage............:
 %                    t = (0:500)*0.001; 
 %                    y1 = sin(2*pi*60*t) + 0.8*sin(2*pi*80*t);
 %                    y2 = sin(2*pi*120*t) + 0.7*sin(2*pi*140*t);
-%                    [fl,fh,med] = bsp_bandwidth(y1,1000);
-%                    [fl2,fh2,med2] = bsp_bandwidth(y2,1000);
-%take at maximum 20000 samples, for performance sake
+%                    [fl,fh,fmed,fmod,fmean] = bsp_bandwidth(y1,1000);
+%                    [fl2,fh2,fmed2,fmod2,fmean2] = bsp_bandwidth(y2,1000);
+%                    bsp_bandwidth(y2,1000); %generates graphical result
+
 if nargin == 2
     nfft = 1024;
     p = 4;
@@ -78,5 +83,7 @@ if nargout ~= 2
         line(fmode,max_power,'Marker','s','Color','green','LineWidth',2.0);
         line(fmean,Pmean,'Marker','s','Color','yellow','LineWidth',2.0);
         line([fmed,fmed],[0, max_power],'Color','magenta');
+        legend('signal','fl','fh','mode','mean','median');
+        xlabel('Frequency(Hz)'); ylabel('Energy');
     end
 end

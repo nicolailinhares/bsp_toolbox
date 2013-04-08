@@ -1,4 +1,4 @@
-function ds = bsp_ds(signal, Fs)%, p, nfft)
+function [ds, f] = bsp_ds(signal, Fs)
 %% Function name....: bsp_ds
 % Date.............: February 20, 2013
 % Author...........: Nicolai Diniz Linhares
@@ -17,14 +17,6 @@ function ds = bsp_ds(signal, Fs)%, p, nfft)
 %                    t = (0:500)*0.001; 
 %                    y1 = sin(2*pi*60*t);
 %                    ds = bsp_ds(y1,1000,0.5);
-
-%if nargin < 4
-%    nfft = 1024;
-%end
-%if nargin < 3
-%   p = 4;
-%end
-%[h,x] = pburg(signal, p, nfft, Fs);
 [H, f, t] = spectrogram(signal, [], [], [], Fs);
 H = abs(H);
 h = sum(H,2);
@@ -33,4 +25,4 @@ for k = 1:numel(t)
     H(:,k) = H(:,k)./(h/T);
 end
 H = ((1 - H).^2)/T;
-ds = median(sum(H,2));
+ds = sum(H,2)';
