@@ -46,17 +46,27 @@ function [me,sd,ds] = bsp_stat_sd(signal, t, Fs)
         max_s = max(signal);
         xes = zeros(1,L);
         for i = 1:L
-            x_pos = i*n*(1/Fs);
-            line([x_pos,x_pos],[min_s, max_s],'Color','magenta');
+            x_pos(i) = i*n*(1/Fs); 
             xes(i) = ((i-1)*n + n/2)*1/Fs;
+            min_v(i) = min_s;
+            max_v(i) = max_s;
         end
         plot(xes,s_info(:,1),'ro');
         plot(xes,s_info(:,2),'greeno');
+        legend('Signal','Window mean', 'Window sd');
+        line([x_pos;x_pos],[min_v; max_v],'Color','magenta');
+        for i = 1:numel(f)
+            ci(:,i) = bootci(250,@median,ds_info(:,i));
+        end
         subplot(2,1,2);
-        plot(f,median(ds_info));
+        hold on;
+        plot(f,median(ds_info),'x');
+        plot(f,ci(1,:),'rv','MarkerSize',5);
+        plot(f,ci(2,:),'r^','MarkerSize',5);
+        plot(f,smooth(median(ds_info),'lowess',5),'g');
+        legend('DS median', 'CI low limit', 'CI up limit', 'DS trend');
     else
-    s = std(s_info);
-    me = s(1);
-    sd = s(2);
-    ds = median(ds_info);
+    me = s_info(:,1);
+    sd = s_info(:,2);
+    ds = ds_info;
     end
