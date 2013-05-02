@@ -13,7 +13,7 @@ function saen = bsp_sam_en(signal,dim,r,down)
 %                    down(optional) ..-> ratio of downsampling of the
 %                    signal
 % Return...........:
-%                    saen .... -> aproximated entropy estimation
+%                    saen .... -> sample entropy estimation
 % Usage............:
 %                    t = (0:500)*0.001; 
 %                    y1 = sin(2*pi*60*t) + 0.8*sin(2*pi*80*t);
