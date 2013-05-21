@@ -51,6 +51,6 @@ function en_arr = bsp_entropy_window(signal, T, Fs, func, param1, param2)
             min_v(i) = min_s;
             max_v(i) = max_s;
         end
-        plot(xes,s_info(:,1),'ro');
+        plot(xes,en_arr,'ro');
         line([x_pos;x_pos],[min_v; max_v],'Color','magenta');
     end
