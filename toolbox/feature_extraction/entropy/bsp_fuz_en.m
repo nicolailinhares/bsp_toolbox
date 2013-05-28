@@ -21,7 +21,7 @@ function fuz_en = bsp_fuz_en(signal, dim, r, ufunc)
 %                    fuz_en2 = bsp_fuz_en(y2,2,0.15*std(y2));
 
 if nargin < 4
-    ufunc = @(d,r)exp(-(d/r)^2)
+    ufunc = @(d,r)exp(-(d./r).^2);
 end
 
 N = length(signal);
@@ -35,7 +35,7 @@ for m = dim:dim+1
     count = zeros(1,N-dim);
     tempMat = dataMat(1:m,:);
     
-    for i = 1:N-m
+    parfor i = 1:N-m
         
         dist = max(abs(tempMat(:,i+1:N-dim) - repmat(tempMat(:,i),1,N-dim-i)));
         

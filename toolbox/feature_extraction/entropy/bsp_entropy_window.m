@@ -35,10 +35,14 @@ function en_arr = bsp_entropy_window(signal, T, Fs, func, param1, param2)
     end
     L = max(size(split));
     en_arr = zeros(L,1);
+    h = waitbar(0,'Processing');
+    matlabpool open
     for i = 1:L
         en_arr(i) = func(split{i},param1,param2);
+        waitbar(i/L,h,'Processing');
     end
-    
+    matlabpool close
+    close(h);
     if nargout == 0
         plot(0:1/Fs:(LSI-1)*(1/Fs),signal);
         hold on;
