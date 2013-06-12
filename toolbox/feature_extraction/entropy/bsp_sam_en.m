@@ -49,5 +49,8 @@ for m = dim:dim+1
 end
 
 saen = log(correl(1)/correl(2));
+if isnan(saen)
+    saen = 0;
+end
 end
 

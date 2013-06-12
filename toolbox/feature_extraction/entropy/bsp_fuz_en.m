@@ -48,4 +48,7 @@ for m = dim:dim+1
 end
 
 fuz_en = log(correl(1)/correl(2));
+if isnan(fuz_en)
+    fuz_en = 0;
+end
 

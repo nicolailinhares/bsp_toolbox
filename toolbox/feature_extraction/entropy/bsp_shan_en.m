@@ -24,7 +24,8 @@ function H = bsp_shan_en(signal,c,base)
     if(nargin < 3)
         base = exp(1);
     end
-    f = normpdf(signal, mean(signal), std(signal));
+    u_q = length(unique(signal)) + 1;
+    [f, x] = hist(signal, u_q);
     f = f/sum(f);
     Err=1e-6;
     if abs(1-sum(f))>Err
