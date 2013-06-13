@@ -3,7 +3,7 @@ values(1,1:500) = ones(1,500)*3;
 t = 0:0.002:(1-0.002);
 values(2,1:500) = sin(60*2*pi*t);
 values(4,1:500) = randn(1,500);
-values(3,1:500) = values(2,:) + values(4,:);
+values(3,1:500) = values(2,:) + 0.40*values(4,:);
 entropy = zeros(4,5);
 dim = 2;
 for i = 1:4
@@ -13,7 +13,11 @@ for i = 1:4
     entropy(i,3) = bsp_ap_en(values(i,:),dim,r);
     entropy(i,4) = bsp_sam_en(values(i,:),dim,r);
     entropy(i,5) = bsp_fuz_en(values(i,:),dim,r);
+    subplot(6,1,i);
+    plot(values(i,:));
+    legend(num2str(i));
 end
+subplot(6,1,5:6);
+plot(entropy,'*');
+legend('shannon','spectral','approximate','sample','fuzzy','Location','EastOutside');
 
-plot(entropy);
-legend('shannon','spectral','approximate','sample','fuzzy');
