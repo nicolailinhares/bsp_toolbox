@@ -15,8 +15,8 @@ function ldf = bsp_lag_dependence(signal,k)
 %                    t = (0:500)*0.001; 
 %                    y1 = sin(2*pi*60*t) + 0.8*sin(2*pi*80*t);
 %                    y2 = sin(2*pi*120*t) + 0.7*sin(2*pi*140*t);
-%                    ap_en = bsp_ap_en(y1,2,0.15*std(y1));
-%                    ap_en = bsp_ap_en(y2,2,0.15*std(y2),2);
+%                    ldf = bsp_lag_dependence(y1,2);
+%                    ldf2 = bsp_lag_dependence(y2,2);
 
     yt = signal(k+1:length(signal));
     ytk = signal(1:length(signal)-k);

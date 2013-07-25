@@ -27,7 +27,7 @@ if nargin < 4
     noverlap = [];
 end
 if nargin < 5
-    nfft = 1024;
+    nfft = 256;
 end
 
 [H, f, t] = spectrogram(signal, window, noverlap, nfft, Fs);
