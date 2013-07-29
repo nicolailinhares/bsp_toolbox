@@ -1,5 +1,5 @@
 function c = bsp_corr(signal1, signal2)
-%% Function name....: bsp_ap_en
+%% Function name....: bsp_corr
 % Date.............: July 25, 2013
 % Author...........: Nicolai Diniz Linhares
 % Description......:
